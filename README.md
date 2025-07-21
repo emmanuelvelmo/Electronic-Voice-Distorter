@@ -1,2 +1,8 @@
-# Electronic-Voice-Distorter
-Electronic Voice Distorter
+# Electronic Voice Distorter
+-
+
+<p align="left">
+  <strong>-</strong>
+  <br/>
+  <img src=""/>
+</p>
