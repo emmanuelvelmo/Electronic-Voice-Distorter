@@ -24,6 +24,10 @@ void app_main()
     // Configurar DAC
     dac_output_enable(SPEAKER_DAC_CHANNEL); // Habilita el canal DAC interno para generar voltajes analógicos (0 – 255 → 0 – 3.3V)
     
+    // contador para submuestreo
+    int skip_val = 0;
+
+    // Se ejecuta continuamente para leer el micrófono
     while (1)
     {
         // Leer micrófono
@@ -32,19 +36,26 @@ void app_main()
         // Centrar señal en 128 y amplificar variación
         int centrar_val = mic_val - 2048; // Quitar offset DC
         int aplificacion_val = centrar_val * 2; // Ganancia digital (ajustable)
-        int dac_val = 128 + aplificacion_val / 16; // Ajustar a 0 - 255
 
-        // Limitar rango del DAC
-        if (dac_val > 255) dac_val = 255;
-        if (dac_val < 0) dac_val = 0;
+        // Distorcionar señal de voz (voz más aguda)
+        aplificacion_val = abs(aplificacion_val); // Rectificación → mete armónicos altos
+        aplificacion_val = aplificacion_val / 2;  // Compresión para no saturar
 
-        // Distorcionar señal de voz
+        // Submuestreo: reproducir solo 1 de cada 2 muestras (acelera la señal)
+        skip_val++;
 
-        
-        
+        // Submuestreo
+        if (skip_val % 2 == 0)
+        {
+            int dac_val = 128 + aplificacion_val / 16; // Ajustar a 0 - 255
 
-        // Enviar a DAC
-        dac_output_voltage(SPEAKER_DAC_CHANNEL, dac_val);
+            // Limitar rango del DAC
+            if (dac_val > 255) dac_val = 255;
+            if (dac_val < 0) dac_val = 0;
+
+            // Enviar a DAC
+            dac_output_voltage(SPEAKER_DAC_CHANNEL, dac_val);
+        }
 
         // Retardo ~20 kHz
         ets_delay_us(50);
