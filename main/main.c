@@ -27,19 +27,19 @@ void app_main()
     while (1)
     {
         // Leer micrófono
-        int mic_value = adc1_get_raw(MIC_ADC_CHANNEL); // 0 - 4095
+        int mic_val = adc1_get_raw(MIC_ADC_CHANNEL); // 0 - 4095
 
         // Centrar señal en 128 y amplificar variación
-        int centered = mic_value - 2048; // Quitar offset DC
-        int amplified = centered * 2; // Ganancia digital (ajustable)
-        int dac_value = 128 + amplified / 16; // Ajustar a 0 - 255
+        int centrar_val = mic_val - 2048; // Quitar offset DC
+        int aplificacion_val = centrar_val * 2; // Ganancia digital (ajustable)
+        int dac_val = 128 + aplificacion_val / 16; // Ajustar a 0 - 255
 
         // Limitar rango del DAC
-        if (dac_value > 255) dac_value = 255;
-        if (dac_value < 0) dac_value = 0;
+        if (dac_val > 255) dac_val = 255;
+        if (dac_val < 0) dac_val = 0;
 
         // Enviar a DAC
-        dac_output_voltage(SPEAKER_DAC_CHANNEL, dac_value);
+        dac_output_voltage(SPEAKER_DAC_CHANNEL, dac_val);
 
         // Retardo ~20 kHz
         ets_delay_us(50);
