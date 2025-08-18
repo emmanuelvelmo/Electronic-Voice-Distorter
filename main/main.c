@@ -38,6 +38,10 @@ void app_main()
         if (dac_val > 255) dac_val = 255;
         if (dac_val < 0) dac_val = 0;
 
+        // Distorcionar voz
+
+        
+
         // Enviar a DAC
         dac_output_voltage(SPEAKER_DAC_CHANNEL, dac_val);
 
